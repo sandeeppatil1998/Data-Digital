@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bootstrap 5 Side Bar Navigation</title>
+    <!-- bootstrap 5 css -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <!-- BOX ICONS CSS-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!-- custom css -->
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Side-Nav -->
+    <div
+      class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column"
+      id="sidebar"
+    >
+      <ul class="nav flex-column text-white w-100">
+        <a href="#" class="nav-link h3 text-white my-2"> </a>
+
+        <li class="nav-link">
+          <!-- <i class="bx bxs-dashboard"></i> -->
+          <a href="/dashboard" class="mx-2">Dashboard</a>
+        </li>
+        <li class="nav-link">
+          <a href="/basic" class="mx-2">pages</a>
+        </li>
+        <li class="nav-link">
+          <a href="/logout" class="mx-2">SignOut</a>
+        </li>
+      </ul>
+    </div>
+
+    <nav class="navbar top-navbar navbar-light bg-dark px-3 py-3">
+      <span style="color: white; margin-left: auto"> User name </span>
+      <a class="btn border-0"></a>
+    </nav>
+    <!-- Main Wrapper -->
+    <div class="p-1 my-container active-cont">
+      <!-- Top Nav -->
+
+      <nav class="navbar top-navbar navbar-light bg-light px-5">
+        <a class="btn border-0" id="menu-btn"><i class="bx bx-menu"></i></a>
+      </nav>
+
+      <!-- <nav class="navbar top-navbar navbar-light bg-light px-5"></nav> -->
+
+      <div class="form-group card">
+        <select
+          id="dropdownselect"
+          href="/extract"
+          class="form-control"
+          name="TempName"
+          onchange="fun1()"
+          style="color: black"
+        >
+        
+          <option
+            id="dropdown"
+            class="form-group"
+            value=""
+            style="color: black; margin: 20px;" 
+          >
+            ---Select Pages---
+          </option>
+       
+          <% for (const i in templates) { %>
+          <option id="dropdown" value="<%= templates[i].fields %>">
+            <%= templates[i].filename %>
+          </option>
+          <% } %>
+        </select>
+        <br />
+
+        <div action="" method="post" id="fields" class="fieldsdata"></div>
+        <br />
+        <form action="/api/auth/Fields" method="post" id="myform">
+          <div
+            class="form-group box"
+            id="input_elem"
+            style="display: flex; flex-wrap: wrap; justify-content: center; place-content: space-evenly;"
+          ></div>
+          <br />
+          <br />
+
+          <button
+            type="button"
+            id="submit_id"
+            class="btn btn-primary text-white"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- bootstrap js -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      var menu_btn = document.querySelector("#menu-btn");
+      var sidebar = document.querySelector("#sidebar");
+      var container = document.querySelector(".my-container");
+      menu_btn.addEventListener("click", () => {
+        sidebar.classList.toggle("active-nav");
+        container.classList.toggle("active-cont");
+      });
+    </script>
+
+    <script type="text/JavaScript">
+            // script for inserting data to the database
+               const btn = document.getElementById("submit_id")
+                btn.addEventListener('click',data)
+            async function data(e) {
+              e.preventDefault()
+              var form = document.getElementById('myform');
+                  var data = new FormData(form);
+                  let field=[]
+                  for (var [key, value] of data) {
+
+                    field.push(value)
+
+
+                  }
+                  console.log("input value :",field);
+      const res = fetch("/api/auth/Fields",{
+                method:'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  fields: field
+                })
+              })
+
+            }
+            // script for inserting data to the database
+            //End of script
+
+                        function fun1(){
+                                      var cnt = [];
+                                    let selected = document.getElementById('dropdownselect').value
+                                    console.log("Select:-",selected)
+                                    cnt.push(selected)
+
+
+                                    document.getElementById("fields").innerHTML=selected;
+                                    var sep = cnt.toString().match(/,/g).length
+                                    sep= sep+1;
+                                    // let selectedlen = selected.count;
+
+                              console.log("Total number of len:",sep)
+                                  var template = <%- JSON.stringify( templates ); %>
+                                  console.log(template[selected]);
+
+                                  // let container = document.getElementById('feilds');
+                                  let container = document.getElementById('input_elem');
+                                  container.innerHTML = '';
+
+
+                                  console.log("Total number of len:",selected)
+
+                                  console.log("dgdg:",cnt)
+
+                            var array = cnt
+                              var ftemp = []
+                              for (var i = 0; i < array.length; i++) {
+                                  var splits = array[i].split(",");
+                                  const result= splits.map((split) => split[0])
+                                  ftemp.push(result)
+                              }
+
+                             var temptwo = ftemp[0]
+                              // console.log("^ufo:-",temptwo)
+
+                              for (elem in temptwo){
+                                console.log("Selected Value:-",temptwo[elem]);
+                                   var input_value = temptwo
+                                   var input = document.createElement("input");
+                                   input.name = input_value
+                                   const labelValue = document.createTextNode(input_value);
+                                   container.appendChild(input);
+                                    container.appendChild(document.createElement("br"));
+                                    container.appendChild(document.createElement("br"));
+                                }
+                                  }
+    </script>
+  </body>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: #fff;
+    }
+
+    .side-navbar {
+      width: 250px;
+      height: 100%;
+      position: fixed;
+      margin-left: -300px;
+      background-color: #100901;
+      transition: 0.5s;
+    }
+
+    .nav-link:active,
+    .nav-link:focus,
+    .nav-link:hover {
+      background-color: #ffffff26;
+    }
+
+    .my-container {
+      transition: 0.4s;
+    }
+
+    .active-nav {
+      margin-left: 0;
+    }
+
+    /* for main section */
+    .active-cont {
+      margin-left: 250px;
+    }
+
+    #menu-btn {
+      background-color: #100901;
+      color: #fff;
+      margin-left: -62px;
+    }
+
+    .my-container input {
+      border-radius: 10px;
+
+      /* padding: 2px 20px; */
+    }
+
+    input {
+      margin: 3px;
+    }
+
+    #text2::-webkit-input-placeholder::before {
+      color: #666;
+      content: "Line 1\A Line 2\A Line 3\A";
+    }
+
+    /* Card */
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      width: 95%;
+      border-radius: 5px;
+      margin-left: 31px;
+      margin-top: -45px;
+    }
+
+    #submit_id {
+      margin: 25px;
+    }
+
+    .fieldsdata {
+      text-align: center;
+      margin: auto;
+      width: 50%;
+      /* border: 3px solid black; */
+      background-color: lightgrey;
+      padding: 20px;
+      text-align: center;
+      /* border: 1px solid #ced4da; */
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-link {
+      margin-top: 20px;
+    }
+
+    #sidebar {
+      margin-top: 20px;
+    }
+    
+  </style>
+</html>

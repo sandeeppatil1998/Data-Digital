@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://kit.fontawesome.com/ac3f9c6c39.js" crossorigin="anonymous"></script>
+    <title>Responsive sidenav</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="top_navbar">
+        <div class="hamburguer">
+          <i class="fa fa-bars"></i>
+        </div>
+        
+        <nav class="top_menu">
+          <div class="logo">Menus</div>
+        </nav>
+        
+</div>
+      <div class="sidebar">
+        <ul>
+          <li>
+            <a href="/dashboard">
+              <span class="icon">
+                <i class="fa fa-book" aria-hidden="true"></i>
+              </span>
+              <span class="title">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/pages">
+              <span class="icon">
+                <i class="fa fa-file-video" aria-hidden="true"></i>
+              </span>
+              <span class="title">Pages</span>
+            </a>
+          </li>
+          <li>
+            <a href="/logout">
+              <span class="icon">
+                <i class="fa fa-volleyball-ball" aria-hidden="true"></i>
+              </span>
+              <span class="title">Logout</span>
+            </a>
+          </li>
+          
+          
+        </ul>
+      </div>
+      <div class="main_container">
+        <div class="form-group card">
+            <select
+              id="dropdownselect"
+              href="/extract"
+              class="form-control"
+              name="TempName"
+              onchange="fun1()"
+              style="color: black;margin: 20px;width: -webkit-fill-available;"
+            >
+              <option
+                id="dropdown"
+                class="form-group"
+                value=""
+                style="color: black "
+              >
+                ---Select Pages---
+              </option>
+    
+              <% for (const i in templates) { %>
+              <option id="dropdown" value="<%= templates[i].fields %>">
+                <%= templates[i].filename %>
+              </option>
+              <% } %>
+            </select>
+            <br />
+    
+            <div action="" method="post" id="fields" class="fieldsdata"></div>
+            <br />
+            <form action="/api/auth/Fields" method="post" id="myform">
+              <div
+                class="form-group box"
+                id="input_elem"
+                style="display: flex; flex-wrap: wrap; justify-content: center"
+              ></div>
+              <br />
+              <br />
+    
+              <button
+                type="button"
+                id="submit_id"
+                class="btn btn-primary text-white"
+                onclick="window.location.reload();"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+    <script>
+        var hamburguer = document.querySelector('.hamburguer');
+    var wrapper = document.querySelector('.wrapper');
+    
+    hamburguer.onclick = function () {
+      wrapper.classList.toggle('collapse');
+    }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      var menu_btn = document.querySelector("#menu-btn");
+      var sidebar = document.querySelector("#sidebar");
+      var container = document.querySelector(".my-container");
+      menu_btn.addEventListener("click", () => {
+        sidebar.classList.toggle("active-nav");
+        container.classList.toggle("active-cont");
+      });
+    </script>
+
+    <script type="text/JavaScript">
+      // script for inserting data to the database
+         const btn = document.getElementById("submit_id")
+          btn.addEventListener('click',data)
+      async function data(e) {
+        e.preventDefault()
+        var form = document.getElementById('myform');
+            var data = new FormData(form);
+            let field=[]
+            for (var [key, value] of data) {
+
+              field.push(value)
+
+
+            }
+            console.log("input value :",field);
+const res = fetch("/api/auth/Fields",{
+          method:'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fields: field
+          })
+        })
+
+      }
+      // script for inserting data to the database
+      //End of script
+
+                  function fun1(){
+                                var cnt = [];
+                              let selected = document.getElementById('dropdownselect').value
+                              console.log("Select:-",selected)
+                              cnt.push(selected)
+
+
+                              document.getElementById("fields").innerHTML=selected;
+                              var sep = cnt.toString().match(/,/g).length
+                              sep= sep+1;
+                              // let selectedlen = selected.count;
+
+                        console.log("Total number of len:",sep)
+                            var template = <%- JSON.stringify( templates ); %>
+                            console.log(template[selected]);
+
+                            // let container = document.getElementById('feilds');
+                            let container = document.getElementById('input_elem');
+                            container.innerHTML = '';
+
+
+                            console.log("Total number of len:",selected)
+
+                            console.log("dgdg:",cnt)
+
+                      var array = cnt
+                        var ftemp = []
+                        for (var i = 0; i < array.length; i++) {
+                            var splits = array[i].split(",");
+                            const result= splits.map((split) => split[0])
+                            ftemp.push(result)
+                        }
+
+                       var temptwo = ftemp[0]
+                        // console.log("^ufo:-",temptwo)
+
+                        for (elem in temptwo){
+                          console.log("Selected Value:-",temptwo[elem]);
+                             var input_value = temptwo
+                             var input = document.createElement("input");
+                             input.name = input_value
+                             const labelValue = document.createTextNode(input_value);
+                             container.appendChild(input);
+                              container.appendChild(document.createElement("br"));
+                              container.appendChild(document.createElement("br"));
+                          }
+                            }
+    </script>
+  </body>
+
+
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,700&display=swap');
+:root {
+  --body-bg: #e1ecf2;
+  --primary: #2e4ead;
+  --secondary: #92a6e2;
+  --secondary-hover: #4360b5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
+  font-family: Montserrat, sans-serif;
+}
+
+body {
+  background: var(--body-bg);
+}
+
+ul {
+  list-style: none; 
+}
+
+.wrapper {
+  margin: 10px;
+}
+.wrapper .top_navbar {
+  width: calc(100% - 20px);
+  height: 50px;
+  display: flex;
+  position: fixed;
+  top: 10px;
+  background-color: whitesmoke;
+}
+.wrapper .top_navbar .hamburguer {
+  width: 73px;
+  /* background: var(--primary); */
+  padding: 10px 0;
+  border-top-left-radius: 20px;
+  cursor: pointer;
+}
+
+.wrapper .top_navbar .hamburguer i {
+  font-size: 32px;
+  text-align: center;
+  width: 100%;
+  color: var(--secondary);
+}
+
+.wrapper .top_navbar .top_menu {
+  width: calc(100% - 70px);
+  background: white;
+  height: 100%;
+  border-top-right-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  color: var(--primary);
+}
+
+.wrapper .top_navbar .top_menu .logo {
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 3px;
+}
+
+.wrapper .top_navbar .top_menu ul {
+  display: flex;
+}
+
+.wrapper .top_navbar .top_menu ul li a {
+  display: block;
+  margin: 0 10px;
+  width: 35px;
+  height: 35px;
+  border: 1px solid var(--primary);
+  line-height: 35px;
+  text-align: center;
+  border-radius: 50%;
+  color: var(--primary);
+  transition: all 0.2s ease-in-out;
+}
+
+.wrapper .top_navbar .top_menu ul li a:hover {
+  background: var(--secondary-hover);
+  color: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.wrapper .sidebar {
+  position: fixed;
+  top: 85px;
+  left: 10px;
+  background: var(--primary);
+  width: 200px;
+  height: calc(100% - 80px);
+  /* border-bottom-left-radius: 20px; */
+  transition: all 0.2s ease-in-out;
+}
+
+.wrapper .sidebar ul li a {
+  display: block;
+  padding: 20px;
+  color: white;
+  position: relative;
+  margin-bottom: 1px;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.wrapper .sidebar ul li a:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--secondary);
+  display: none;
+}
+
+.wrapper .sidebar ul li a span.icon {
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.wrapper .sidebar ul li a span.title {
+  display: inline-block;
+}
+
+.wrapper .sidebar ul li a:hover,
+.wrapper .sidebar ul li a:active {
+  background: var(--secondary-hover);
+  transition: all 0.2s ease-in-out;
+  color: white;
+}
+
+.wrapper .sidebar ul li a:hover:before,
+.wrapper .sidebar ul li a:active:before {
+  display: block;
+}
+
+.wrapper .sidebar ul li a:hover{
+  transform: translate3d(1px, -1px, 1px);
+}
+
+.wrapper .main_container {
+  margin-top: 70px;
+  margin-left: 200px;
+  padding: 15px 0 15px 15px;
+  transition: all 0.2s ease-in-out;
+  height: calc(100vh - 110px);
+  overflow: auto;
+  border-bottom-right-radius: 20px;
+}
+
+.wrapper .main_container .item {
+  background: white;
+  /* margin-bottom: 10px; */
+  padding: 10px;
+  font-size: 14px;
+  /* line-height: 22px;  */
+}
+
+.wrapper.collapse .sidebar {
+  width: 70px;
+}
+
+.wrapper.collapse .sidebar ul li a { 
+   text-align: center;
+}
+
+.wrapper.collapse .sidebar ul li a span.icon {
+  margin: 0; 
+}
+
+.wrapper.collapse .sidebar ul li a span.title {
+  display: none;
+}
+
+.wrapper.collapse .main_container {
+  margin-left: 70px;
+  height: calc(100vh - 110px);
+  overflow: auto;
+  border-bottom-right-radius: 20px;
+}
+
+.card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      width: 97%;
+      border-radius: 5px;
+      margin-left: 20px;
+    }
+
+    #submit_id {
+      margin: 25px;
+      width: 120px;
+      height: 40px;
+      display: inline;
+      color: white;
+      background: blue;
+      border-radius: 5px;
+      border: none;
+      font-weight:550;
+      font-size: 15px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease 0s;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .fieldsdata {
+      text-align: center;
+      margin: auto;
+      width: 50%;
+      /* border: 3px solid black; */
+      background-color: lightgrey;
+      padding: 10px;
+      text-align: center;
+      /* border: 1px solid #ced4da; */
+    }
+
+  </style>
+<script>
+
+  function preventBack(){window.history.forward();}
+
+  setTimeout("preventBack()", 0);
+
+  window.onunload=function(){null};
+
+</script>
+
+
+</html>
